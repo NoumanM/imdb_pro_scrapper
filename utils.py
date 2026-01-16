@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from pathlib import Path
 from selenium_stealth import stealth
+from selenium.webdriver.common.action_chains import ActionChains
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -60,3 +61,39 @@ def scroll_to_element_smoothly(driver, xpath):
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'})",
                           element)
 
+def scroll_to_end_of_page(driver):
+    # Scroll to the end of the page
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait for the page to load
+        WebDriverWait(driver, 2).until(lambda d: True)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+
+def btn_click_with_action_chains(driver, xpath, wait_time=10):
+    element = WebDriverWait(driver, wait_time).until(
+        EC.element_to_be_clickable((By.XPATH, xpath))
+    )
+    action = ActionChains(driver)
+    action.move_to_element(element).perform()
+    action.click(element).perform()
+
+class ImdbXpaths:
+    SEARCH_BOX = "//input[@placeholder='Search and Discover']"
+    TARGETED_PROFILE = '(//li/following-sibling::li[not(contains(text(), "Actress")) and not(contains(text(), "Actor")) and ((contains(text(), "Legal")) or(contains(text(), "Talent")))]//parent::ul//span[contains(@class,"display-name") or contains(@class,"display-company")]//a[text()="{0}"])[1]'
+    CLIENTS_BTN = "//li[@data-a-tab-name='clients']/a | //h3[contains(text(),'Clients')] | //a[contains(@href, '/clients/')]"
+    NEXT_BTN = "//span[contains(text(),' Show next')]/preceding-sibling::input | //span[contains(@class, 'ipc-see-more__text')]/ancestor::button"
+    CLIENT_LIST = "//td[@class='client_profile']/div/div/div/div[2]//span[contains(@class, 'const_full_name')]/a | //table[@id='company_clients']//tr[position()>1]//span[@class='a-size-base-plus']/parent::a | //li[@data-testid='client-card']/div/div/div/a[contains(@href, '/name/')]"
+    MANAGER_XPATH = "//span[contains(text(),' Manager')] | //span[contains(text(),'Manager')]"
+    ACTOR_NAME_XPATH = "//h1//span"
+    STAR_RATING_XPATH = "(//span[contains(text(),' STARmeter:')]/following-sibling::span)[1] | (//span[@aria-label='STARmeter']/following-sibling::span)[2]"
+    TALENT_AGENT_BLOCKS = "//span[contains(text(),' Talent Agent')] | //span[contains(text(),'Talent Agent')]"
+    LAW_FIRM_XPATH = "//span[contains(text(),'Legal Representative')]/../../following-sibling::div/ul[1]/li[2]//a | //span[contains(text(),'Legal Representative')]/../../following-sibling::div//ul[1]//button/preceding-sibling::span"
+    LAWYER_NAME_XPATH = "//span[contains(text(),'Legal Representative')]/../../following-sibling::div//p//span[contains(text(),'Representatives')]/../../following-sibling::ul//span[contains(@class,'glyphicons glyphicons-icon')]/../span[last()]//a | //span[contains(text(),'Legal Representative')]/../../following-sibling::div//li//a"
