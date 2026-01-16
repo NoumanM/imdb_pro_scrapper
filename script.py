@@ -98,36 +98,49 @@ def main(name_value, profile_count):
                             law_firm = ''
                             talent_agent_blocks = driver.find_elements(By.XPATH, ImdbXpaths.TALENT_AGENT_BLOCKS)
                             for i in talent_agent_blocks:
-                                talent_agent_exist = i.get_attribute('innerText').strip()  #j =1
-                                j +=1
-                                if 'talent agent' in talent_agent_exist.lower() or 'theatrical' in talent_agent_exist.lower():
-                                    item[f'Agency {k}'] = driver.find_element(By.XPATH, f"(//span[contains(text(),' Talent Agent')]/../../following-sibling::div/ul[1]/li[2]//a)[{j}] | (//span[contains(text(),'Talent Agent')]/../../following-sibling::div//ul//button[1]/preceding-sibling::span)[{j}]").get_attribute('innerText')
-                                    k += 1
-                                    agency_1 = str(item[f'Agency 1']) if k == 2 else agency_1
-                                    agency_2 = str(item['Agency 2']) if k == 3 else agency_2
-                                    agency_3 = str(item['Agency 3']) if k == 4 else agency_3
-                                    agency_4 = str(item['Agency 4']) if k == 5 else agency_4
+                                try:
+                                    talent_agent_exist = i.get_attribute('innerText').strip()  #j =1
+                                    j +=1
+                                    if 'talent agent' in talent_agent_exist.lower() or 'theatrical' in talent_agent_exist.lower():
+                                        item[f'Agency {k}'] = driver.find_element(By.XPATH, f"(//span[contains(text(),' Talent Agent')]/../../following-sibling::div/ul[1]/li[2]//a)[{j}] | (//span[contains(text(),'Talent Agent')]/../../following-sibling::div//ul//button[1]/preceding-sibling::span)[{j}]").get_attribute('innerText')
+                                        k += 1
+                                        agency_1 = str(item[f'Agency 1']) if k == 2 else agency_1
+                                        agency_2 = str(item['Agency 2']) if k == 3 else agency_2
+                                        agency_3 = str(item['Agency 3']) if k == 4 else agency_3
+                                        agency_4 = str(item['Agency 4']) if k == 5 else agency_4
 
-                                    i = 1
-                                    for r in driver.find_elements(By.XPATH, f"(//span[contains(text(),' Talent Agent')])[{j}]/../../following-sibling::div/p//span[contains(text(),' Representatives')]/../../following-sibling::ul/li//span[contains(@class,'glyphicons-user text_color_stone')]/../span//a[contains(@href,'https')] | (//span[contains(text(),'Talent Agent')])[{j}]/../../following-sibling::div//ul/li//a[contains(@href, 'contact_repr')]"):
-                                        item[f'Talent Agent {i}'] = r.get_attribute('innerText')
-                                        if j == 1:
-                                            talent_agent_1 = talent_agent_1 + str(item[f'Talent Agent {i}']) +" "+ "\n"
-                                        if j == 2:
-                                            talent_agent_2 = talent_agent_2 + str(item[f'Talent Agent {i}']) +" "+ "\n"
-                                        if j == 3:
-                                            talent_agent_3 = talent_agent_3 + str(item[f'Talent Agent {i}']) +" "+ "\n"
-                                        if j == 4:
-                                            talent_agent_4 = talent_agent_4 + str(item[f'Talent Agent {i}']) +" "+ "\n"
-                                        i += 1
+                                        i = 1
+                                        for r in driver.find_elements(By.XPATH, f"(//span[contains(text(),' Talent Agent')])[{j}]/../../following-sibling::div/p//span[contains(text(),' Representatives')]/../../following-sibling::ul/li//span[contains(@class,'glyphicons-user text_color_stone')]/../span//a[contains(@href,'https')] | (//span[contains(text(),'Talent Agent')])[{j}]/../../following-sibling::div//ul/li//a[contains(@href, 'contact_repr')]"):
+                                            item[f'Talent Agent {i}'] = r.get_attribute('innerText')
+                                            if j == 1:
+                                                talent_agent_1 = talent_agent_1 + str(item[f'Talent Agent {i}']) +" "+ "\n"
+                                            if j == 2:
+                                                talent_agent_2 = talent_agent_2 + str(item[f'Talent Agent {i}']) +" "+ "\n"
+                                            if j == 3:
+                                                talent_agent_3 = talent_agent_3 + str(item[f'Talent Agent {i}']) +" "+ "\n"
+                                            if j == 4:
+                                                talent_agent_4 = talent_agent_4 + str(item[f'Talent Agent {i}']) +" "+ "\n"
+                                            i += 1
+                                except:
+                                    print('Error: Talent Agent Info')
+                                    continue
 
                             for q in driver.find_elements(By.XPATH, ImdbXpaths.LAW_FIRM_XPATH):
-                                law_firm = q.get_attribute('innerText')
+                                try:
+                                    law_firm = q.get_attribute('innerText')
+                                except:
+                                    law_firm = ''
+                                    print('Error: Law Firm Info')
+                                    continue
                             n = 1
                             for r in driver.find_elements(By.XPATH, ImdbXpaths.LAWYER_NAME_XPATH):
-                                item[f"Lawyer {n}"] = r.get_attribute('innerText')
-                                lawyer = lawyer + item[f"Lawyer {n}"] + " "+"\n"
-                                n += 1
+                                try:
+                                    item[f"Lawyer {n}"] = r.get_attribute('innerText')
+                                    lawyer = lawyer + item[f"Lawyer {n}"] + " "+"\n"
+                                    n += 1
+                                except:
+                                    print('Error: Lawyer Info')
+                                    continue
 
                             filename = 'data.xlsx'
                             file_exists = os.path.isfile(filename)
