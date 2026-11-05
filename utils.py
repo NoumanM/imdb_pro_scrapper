@@ -86,11 +86,13 @@ def btn_click_with_action_chains(driver, xpath, wait_time=10):
     action.click(element).perform()
 
 class ImdbXpaths:
-    SEARCH_BOX = "//input[@placeholder='Search and Discover']"
+    SEARCH_BOX = "//input[@placeholder='Search and discover' or @placeholder='Search and Discover']"
+    TARGETED_PROFILE_1 = '(//li/following-sibling::li[(contains(text(), "Legal")) or (contains(text(), "Talent")) or (contains(text(), "Agent"))]//parent::ul//span[contains(@class,"display-name")]//a[text()="{0}"])[1]'
     TARGETED_PROFILE = '(//li/following-sibling::li[not(contains(text(), "Actress")) and not(contains(text(), "Actor")) and ((contains(text(), "Legal")) or(contains(text(), "Talent")))]//parent::ul//span[contains(@class,"display-name") or contains(@class,"display-company")]//a[text()="{0}"])[1]'
+    TARGETED_PROFILE_2 = '(//li/following-sibling::li//parent::ul//span[contains(@class,"display-name") or contains(@class,"display-company")]//a[text()="{0}"])[1]'
     CLIENTS_BTN = "//li[@data-a-tab-name='clients']/a | //h3[contains(text(),'Clients')] | //a[contains(@href, '/clients/')]"
     NEXT_BTN = "//span[contains(text(),' Show next')]/preceding-sibling::input | //span[contains(@class, 'ipc-see-more__text')]/ancestor::button"
-    CLIENT_LIST = "//td[@class='client_profile']/div/div/div/div[2]//span[contains(@class, 'const_full_name')]/a | //table[@id='company_clients']//tr[position()>1]//span[@class='a-size-base-plus']/parent::a | //li[@data-testid='client-card']/div/div/div/a[contains(@href, '/name/')]"
+    CLIENT_LIST = "//li[@data-testid='client-card']/div/div/div/a[contains(@href, '/name/')] | //div[@data-testid='ccl-client-name']/a"
     MANAGER_XPATH = "//span[contains(text(),' Manager')] | //span[contains(text(),'Manager')]"
     ACTOR_NAME_XPATH = "//h1//span"
     STAR_RATING_XPATH = "(//span[contains(text(),' STARmeter:')]/following-sibling::span)[1] | (//span[@aria-label='STARmeter']/following-sibling::span)[2]"

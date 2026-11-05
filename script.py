@@ -28,7 +28,9 @@ def main(name_value, profile_count):
     insert_value_and_press_enter(driver, ImdbXpaths.SEARCH_BOX, name_value, previouse_clear=True)
     sleep(5)
     try:
-        result_of_searched_profile = driver.find_elements(By.XPATH, ImdbXpaths.TARGETED_PROFILE.format(name_value))
+        result_of_searched_profile = driver.find_elements(By.XPATH, ImdbXpaths.TARGETED_PROFILE_1.format(name_value))
+        if not result_of_searched_profile:
+            result_of_searched_profile = driver.find_elements(By.XPATH, ImdbXpaths.TARGETED_PROFILE.format(name_value))
         if result_of_searched_profile:
             result_of_searched_profile[0].click()
             sleep(3)
